@@ -1,0 +1,11 @@
+.row
+  .col-sm-6.col-sm-offset-4
+    %h1 NOTAM
+    %p Please upload NOTAM data to show parsed information
+
+    = form_tag notam_path, method: :post, multipart: true do
+      = file_field_tag :file
+      %br
+      = button_tag type: 'submit', class: 'btn btn-sm btn-primary' do
+        = icon('cloud-upload')
+        Upload

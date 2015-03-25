@@ -1,0 +1,14 @@
+.row
+  .col-sm-10.col-sm-offset-1
+    %table.table
+      %thead
+        %tr
+          %th Aerodome
+          - @weekdays.each do |wd|
+            %th= wd
+      %tbody
+        - @aerodomes.each do |ad, weekdays|
+          %tr
+            %td= ad
+            - weekdays.each do |open|
+              %td= open.join('<br />').html_safe
