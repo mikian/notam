@@ -4,8 +4,11 @@
     %p Please upload NOTAM data to show parsed information
 
     = form_tag notam_path, method: :post, multipart: true do
+      %p Copy and paste NOTAM data here
+      = text_area_tag :data, nil, rows: 3, cols: 45
+      %p or upload text file containing NOTAM data
       = file_field_tag :file
       %br
-      = button_tag type: 'submit', class: 'btn btn-sm btn-primary' do
+      = button_tag type: 'submit', class: 'btn btn-lg btn-primary' do
         = icon('cloud-upload')
-        Upload
+        Parse

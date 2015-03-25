@@ -11,4 +11,4 @@
           %tr
             %td= ad
             - weekdays.each do |open|
-              %td= open.join('<br />').html_safe
+              %td= open.join('<br />').html_safe if open.kind_of?(Array)

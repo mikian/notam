@@ -4,8 +4,12 @@ class NotamsController < ApplicationController
 
   def show
     # Parse uploaded notams
-    if params[:file]
-      raw = params[:file].read
+    if params[:file] or params[:data]
+      raw = if params[:file]
+        params[:file].read
+      else
+        params[:data].gsub("\r\n", "\n")
+      end
 
       notices = raw.split("\n\n").collect{|n| Notice.new(text: n)}
       # Parse notices
@@ -17,14 +21,14 @@ class NotamsController < ApplicationController
       # Build tabular data
       @aerodomes = Hash.new{|h,k| h[k] = []}
       @weekdays = %w{MON TUE WED THU FRI SAT SUN}
-      re = Regexp.new(/(MON|TUE|WED|THU|FRI|SAT|SUN)(?:-(MON|TUE|WED|THU|FRI|SAT|SUN))? ([, \d-]+|CLOSED|CLSD)/)
+      re = Regexp.new(/(MON|TUE|WED|THU|FRI|SAT|SUN)(?:-(MON|TUE|WED|THU|FRI|SAT|SUN))? ?([, \d-]+|CLOSED|CLSD)/)
 
       notices.sort_by(&:created_at).each do |notice|
         # Parse opening hours
         open = notice.fields['E'].scan(re)
         open.each do |m|
           (@weekdays.index(m[0])..(@weekdays.index(m[1])||@weekdays.index(m[0]))).each do |i|
-            @aerodomes[notice.fields['A']][i] = m[2].split(', ').map(&:strip)
+            @aerodomes[notice.fields['A']][i] = m[2].split(/, | /).map(&:strip)
           end
         end
       end
